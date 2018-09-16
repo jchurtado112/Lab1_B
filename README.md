@@ -47,9 +47,9 @@ def process_comments(comments, negative, neutral, positive):
             
             
             #Checks if negative, neutral or positive
-            if get_text_negative_proba(comment.body) > 0.5:
+            if get_text_negative_proba(comment.body) > 0.2:
                 negative.append(comment.body)
-            elif get_text_neutral_proba(comment.body) >0.5:
+            elif get_text_neutral_proba(comment.body) > 0.5:
                 neutral.append(comment.body)
             else:
                 if get_text_positive_proba(comment.body) > 0.5 :
@@ -102,4 +102,3 @@ def main():
    
 
 main()  #Calls main method
-
