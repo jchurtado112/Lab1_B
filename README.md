@@ -1,7 +1,8 @@
 #Jesus Hurtado, CS 2302 - Data Structures, Lab1 Option B, Fall 2018
-#Retrieve comments from a Reddit app and classify them negative, neutral or positive
+#Recursively retrieve comments from a Reddit app and classify them negative, neutral or positive.
 
 # Importing nltk and praw libraries
+import time
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import praw
@@ -42,18 +43,17 @@ def process_comments(comments, negative, neutral, positive):
     for comment in comments:    #Iterate through the comments
         if len(comment.replies) > 0:    #Checks if there are more replies
             
-            #Recursive method is called to iterate to the next reply available
-            process_comments(comment.replies, negative, neutral, positive)
-            
-            
             #Checks if negative, neutral or positive
             if get_text_negative_proba(comment.body) > 0.2:
                 negative.append(comment.body)
             elif get_text_neutral_proba(comment.body) > 0.5:
                 neutral.append(comment.body)
             else:
-                if get_text_positive_proba(comment.body) > 0.5 :
+                if get_text_positive_proba(comment.body) > 0.5:
                     positive.append(comment.body)
+                    
+            #Recursive method is called to iterate to the next reply available
+            process_comments(comment.replies, negative, neutral, positive)
                     
                     
     return   #Returns to main
@@ -64,10 +64,21 @@ def main():
     
     negative_comments_list=[]   #Lists to store comments according to behavior
     neutral_comments_list=[]
-    positive_comments_list=[]
+    positive_comments_list=[] 
   
     #Calls method to start retrieving, classifying and storing comments
+    start = time.time() #Starts the time
     process_comments(comm, negative_comments_list, neutral_comments_list, positive_comments_list)
+    end = time.time()   #Ends the time
+    time_elapsed = end - start
+    
+    #Prints the running time 
+    print()
+    print('##################################################################')
+    print()
+    print("This is the running time in seconds: {time}".format(time=round(time_elapsed, 4)))
+    print()
+    print('##################################################################')
     
     if len(negative_comments_list) > 0: #Will print negative comments if found
         print()
